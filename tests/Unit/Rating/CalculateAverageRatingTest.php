@@ -26,7 +26,7 @@ final class CalculateAverageRatingTest extends TestCase
 
     /** 
      * Fournit des scénarios de tests avec différentes combinaisons de Reviews
-     * @return iterable<string, array{0: VideoGame, 1: ?int}>
+     * @return iterable<array{VideoGame,?int}>
      */
     public static function provideReviewsData(): iterable
     {
