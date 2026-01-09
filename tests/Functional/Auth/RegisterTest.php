@@ -6,6 +6,7 @@ namespace App\Tests\Functional\Auth;
 
 use App\Model\Entity\User;
 use App\Tests\Functional\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 final class RegisterTest extends FunctionalTestCase
@@ -29,8 +30,10 @@ final class RegisterTest extends FunctionalTestCase
     }
 
     /**
-     * @dataProvider provideInvalidFormData
+     * @Tested with invalid form data
      */
+    #[DataProvider('provideInvalidFormData')]
+
     public function testThatRegistrationShouldFailed(array $formData): void
     {
         $this->get('/auth/register');
