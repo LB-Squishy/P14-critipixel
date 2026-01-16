@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 #[Entity]
 class Review
@@ -29,10 +32,13 @@ class Review
     #[JoinColumn(nullable: false)]
     private User $user;
 
-    #[Range(min: 1, max: 5)]
+    #[NotNull(message: 'La note est obligatoire.')]
+    #[NotBlank(message: 'La note est obligatoire.')]
+    #[Range(min: 1, max: 5, notInRangeMessage: 'La note doit être comprise entre {{ min }} et {{ max }}.')]
     #[Column]
     private int $rating;
 
+    #[Length(max: 1000, maxMessage: 'Le commentaire ne peut pas dépasser {{ limit }} caractères.')]
     #[Column(type: Types::TEXT, nullable: true)]
     private ?string $comment = null;
 

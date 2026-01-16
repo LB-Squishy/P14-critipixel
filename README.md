@@ -88,7 +88,7 @@ _Note : le fichier `.symfony.local.yaml` est configuré pour surveiller les fich
 ### Tests
 
 ```bash
-symfony php bin/phpunit
+vendor/bin/phpunit --testdox
 ```
 
 _Note : Penser à charger les fixtures avant chaque éxécution des tests._

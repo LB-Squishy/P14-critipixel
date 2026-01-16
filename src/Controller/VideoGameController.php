@@ -39,15 +39,23 @@ final class VideoGameController extends AbstractController
 
         $form = $this->createForm(ReviewType::class, $review)->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
             $this->denyAccessUnlessGranted('review', $videoGame);
-            $review->setVideoGame($videoGame);
-            $review->setUser($this->getUser());
-            $entityManager->persist($review);
-            $entityManager->flush();
-            return $this->redirectToRoute('video_games_show', ['slug' => $videoGame->getSlug()]);
+
+            if ($form->isValid()) {
+                $review->setVideoGame($videoGame);
+                $review->setUser($this->getUser());
+                $entityManager->persist($review);
+                $entityManager->flush();
+                return $this->redirectToRoute('video_games_show', ['slug' => $videoGame->getSlug()]);
+            }
         }
 
-        return $this->render('views/video_games/show.html.twig', ['video_game' => $videoGame, 'form' => $form]);
+        $response = $this->render('views/video_games/show.html.twig', ['video_game' => $videoGame, 'form' => $form]);
+
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        return $response;
     }
 }

@@ -22,7 +22,7 @@ final class CountRatingsPerValueTest extends TestCase
         $ratingHandler = new RatingHandler();
         $ratingHandler->countRatingsPerValue($videoGame);
 
-        $this->assertEquals($expectedNumberOfRatingPerValue, $videoGame->getNumberOfRatingsPerValue());
+        $this->assertEquals($expectedNumberOfRatingPerValue, $videoGame->getNumberOfRatingsPerValue(), 'Le comptage des notes par valeur doit être correct.');
     }
 
     /** 

@@ -21,7 +21,7 @@ final class CalculateAverageRatingTest extends TestCase
         $ratingHandler = new RatingHandler();
         $ratingHandler->calculateAverage($videoGame);
 
-        $this->assertSame($expectedAverageRating, $videoGame->getAverageRating());
+        $this->assertSame($expectedAverageRating, $videoGame->getAverageRating(), 'La note moyenne calculée doit être correcte.');
     }
 
     /** 
