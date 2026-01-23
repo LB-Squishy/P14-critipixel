@@ -80,4 +80,17 @@ abstract class FunctionalTestCase extends WebTestCase
     {
         return $this->client->submitForm($button, $formData, $method);
     }
+
+    /**
+     * Click link avec selecteur CSS
+     * @param string $selector
+     * @param string $text
+     * @return Crawler
+     */
+    protected function clickLinkBySelector(string $selector, string $text): Crawler
+    {
+        $crawler = $this->client->getCrawler();
+        $link = $crawler->filter($selector)->selectLink($text)->link();
+        return $this->client->click($link);
+    }
 }
