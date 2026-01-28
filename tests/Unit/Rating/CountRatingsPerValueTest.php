@@ -19,9 +19,11 @@ final class CountRatingsPerValueTest extends TestCase
     #[DataProvider('provideRatingsData')]
     public function testCountRatingsPerValue(VideoGame $videoGame, NumberOfRatingPerValue $expectedNumberOfRatingPerValue): void
     {
+        // Compte les notes par valeur
         $ratingHandler = new RatingHandler();
         $ratingHandler->countRatingsPerValue($videoGame);
 
+        // Vérifie que le comptage des notes par valeur est correct
         $this->assertEquals($expectedNumberOfRatingPerValue, $videoGame->getNumberOfRatingsPerValue(), 'Le comptage des notes par valeur doit être correct.');
     }
 
@@ -57,8 +59,10 @@ final class CountRatingsPerValueTest extends TestCase
      */
     private static function createVideoGame(int ...$ratings): VideoGame
     {
+        // Crée une instance de VideoGame
         $videoGame = new VideoGame();
 
+        // Ajoute des Reviews avec les notes spécifiées
         foreach ($ratings as $rating) {
             $videoGame->getReviews()->add((new Review())->setRating($rating));
         }
@@ -77,8 +81,10 @@ final class CountRatingsPerValueTest extends TestCase
      */
     private static function createNumberOfRatingPerValue(int $one, int $two, int $three, int $four, int $five): NumberOfRatingPerValue
     {
+        // Crée une instance de NumberOfRatingPerValue
         $numberOfRatingPerValue = new NumberOfRatingPerValue();
 
+        // Incrémente les compteurs selon les valeurs spécifiées
         for ($i = 0; $i < $one; $i++) {
             $numberOfRatingPerValue->increaseOne();
         }

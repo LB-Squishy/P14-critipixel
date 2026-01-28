@@ -33,12 +33,16 @@ abstract class FunctionalTestCase extends WebTestCase
         unset($this->client);
     }
 
+    /**
+     * Retourne le gestionnaire d'entités Doctrine.
+     */
     protected function getEntityManager(): EntityManagerInterface
     {
         return $this->service(EntityManagerInterface::class);
     }
 
     /**
+     * Récupère un service du conteneur d'injection de dépendances.
      * @template T
      * @param class-string<T> $id
      * @return T
@@ -49,7 +53,7 @@ abstract class FunctionalTestCase extends WebTestCase
     }
 
     /**
-     * Makes a GET request to the given URI.
+     * Effectue une requête GET pour les tests fonctionnels.
      * @param string $uri
      * @return Crawler
      */
@@ -59,7 +63,7 @@ abstract class FunctionalTestCase extends WebTestCase
     }
 
     /**
-     * Logs in a user for the functional tests.
+     * Connecte un utilisateur pour les tests fonctionnels.
      * @param string $email
      * @return void
      */
@@ -71,7 +75,7 @@ abstract class FunctionalTestCase extends WebTestCase
     }
 
     /**
-     * Submits a form for the functional tests.
+     * Soumet un formulaire pour les tests fonctionnels.
      * @param string $button
      * @param array<string, mixed> $formData
      * @return Crawler
@@ -79,18 +83,5 @@ abstract class FunctionalTestCase extends WebTestCase
     protected function submitForm(string $button, array $formData = [], string $method = 'POST'): Crawler
     {
         return $this->client->submitForm($button, $formData, $method);
-    }
-
-    /**
-     * Click link avec selecteur CSS
-     * @param string $selector
-     * @param string $text
-     * @return Crawler
-     */
-    protected function clickLinkBySelector(string $selector, string $text): Crawler
-    {
-        $crawler = $this->client->getCrawler();
-        $link = $crawler->filter($selector)->selectLink($text)->link();
-        return $this->client->click($link);
     }
 }

@@ -18,9 +18,11 @@ final class CalculateAverageRatingTest extends TestCase
     #[DataProvider('provideReviewsData')]
     public function testCalculateAverageRating(VideoGame $videoGame, ?int $expectedAverageRating): void
     {
+        // Calcule la note moyenne
         $ratingHandler = new RatingHandler();
         $ratingHandler->calculateAverage($videoGame);
 
+        // Vérifie que la note moyenne est correcte
         $this->assertSame($expectedAverageRating, $videoGame->getAverageRating(), 'La note moyenne calculée doit être correcte.');
     }
 
