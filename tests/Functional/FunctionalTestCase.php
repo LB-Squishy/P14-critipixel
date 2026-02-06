@@ -43,8 +43,11 @@ abstract class FunctionalTestCase extends WebTestCase
 
     /**
      * Récupère un service du conteneur d'injection de dépendances.
+     *
      * @template T
+     *
      * @param class-string<T> $id
+     *
      * @return T
      */
     protected function service(string $id): object
@@ -54,8 +57,6 @@ abstract class FunctionalTestCase extends WebTestCase
 
     /**
      * Effectue une requête GET pour les tests fonctionnels.
-     * @param string $uri
-     * @return Crawler
      */
     protected function get(string $uri, array $parameters = []): Crawler
     {
@@ -64,8 +65,6 @@ abstract class FunctionalTestCase extends WebTestCase
 
     /**
      * Connecte un utilisateur pour les tests fonctionnels.
-     * @param string $email
-     * @return void
      */
     protected function login(string $email = 'user+0@email.com'): void
     {
@@ -76,9 +75,8 @@ abstract class FunctionalTestCase extends WebTestCase
 
     /**
      * Soumet un formulaire pour les tests fonctionnels.
-     * @param string $button
+     *
      * @param array<string, mixed> $formData
-     * @return Crawler
      */
     protected function submitForm(string $button, array $formData = [], string $method = 'POST'): Crawler
     {

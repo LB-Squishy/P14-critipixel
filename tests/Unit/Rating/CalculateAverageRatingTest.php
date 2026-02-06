@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Rating;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
-use App\Model\Entity\VideoGame;
 use App\Model\Entity\Review;
+use App\Model\Entity\VideoGame;
 use App\Rating\RatingHandler;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
 final class CalculateAverageRatingTest extends TestCase
 {
     /**
-     * Teste le calcul de la note moyenne pour différentes combinaisons de Reviews
+     * Teste le calcul de la note moyenne pour différentes combinaisons de Reviews.
      */
     #[DataProvider('provideReviewsData')]
     public function testCalculateAverageRating(VideoGame $videoGame, ?int $expectedAverageRating): void
@@ -26,8 +26,9 @@ final class CalculateAverageRatingTest extends TestCase
         $this->assertSame($expectedAverageRating, $videoGame->getAverageRating(), 'La note moyenne calculée doit être correcte.');
     }
 
-    /** 
-     * Fournit des scénarios de tests avec différentes combinaisons de Reviews
+    /**
+     * Fournit des scénarios de tests avec différentes combinaisons de Reviews.
+     *
      * @return iterable<array{VideoGame,?int}>
      */
     public static function provideReviewsData(): iterable
@@ -58,9 +59,9 @@ final class CalculateAverageRatingTest extends TestCase
     }
 
     /**
-     * Crée une instance de VideoGame avec des Reviews ayant les notes spécifiées
+     * Crée une instance de VideoGame avec des Reviews ayant les notes spécifiées.
+     *
      * @param int ...$ratings Les notes des reviews à ajouter
-     * @return VideoGame
      */
     private static function createVideoGame(int ...$ratings): VideoGame
     {

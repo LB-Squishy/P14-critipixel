@@ -33,7 +33,6 @@ final class RegisterTest extends FunctionalTestCase
      * @Tested with invalid form data
      */
     #[DataProvider('provideInvalidFormData')]
-
     public function testThatRegistrationShouldFailed(array $formData): void
     {
         $this->get('/auth/register');
@@ -58,7 +57,7 @@ final class RegisterTest extends FunctionalTestCase
         return $overrideData + [
             'register[username]' => 'username',
             'register[email]' => 'user@email.com',
-            'register[plainPassword]' => 'SuperPassword123!'
+            'register[plainPassword]' => 'SuperPassword123!',
         ];
     }
 }

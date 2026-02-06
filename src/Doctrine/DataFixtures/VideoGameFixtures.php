@@ -8,22 +8,19 @@ use App\Model\Entity\User;
 use App\Model\Entity\VideoGame;
 use App\Rating\CalculateAverageRating;
 use App\Rating\CountRatingsPerValue;
-use DateInterval;
-use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Generator;
-
-use function array_fill_callback;
 
 final class VideoGameFixtures extends Fixture implements DependentFixtureInterface
 {
     public function __construct(
         private readonly Generator $faker,
         private readonly CalculateAverageRating $calculateAverageRating,
-        private readonly CountRatingsPerValue $countRatingsPerValue
-    ) {}
+        private readonly CountRatingsPerValue $countRatingsPerValue,
+    ) {
+    }
 
     public function load(ObjectManager $manager): void
     {
@@ -32,13 +29,13 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
         $tags = $manager->getRepository(Tag::class)->findAll();
 
         // Création des jeux vidéo
-        $videoGames = array_fill_callback(
+        $videoGames = \array_fill_callback(
             0,
             50,
-            fn(int $index): VideoGame => (new VideoGame)
+            fn (int $index): VideoGame => (new VideoGame())
                 ->setTitle(sprintf('Jeu vidéo %d', $index))
                 ->setDescription($this->faker->paragraphs(10, true))
-                ->setReleaseDate((new DateTimeImmutable())->sub(new DateInterval(sprintf('P%dD', $index))))
+                ->setReleaseDate((new \DateTimeImmutable())->sub(new \DateInterval(sprintf('P%dD', $index))))
                 ->setTest($this->faker->paragraphs(6, true))
                 ->setRating(($index % 5) + 1)
                 ->setImageName(sprintf('video_game_%d.png', $index))
@@ -47,8 +44,8 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
 
         // TODO : Ajouter les tags aux vidéos
         foreach ($videoGames as $videoGame) {
-            $randomTags = $this->faker->randomElements($tags, rand(1, 3));
             /** @var VideoGame $videoGame */
+            $randomTags = $this->faker->randomElements($tags, rand(1, 3));
             foreach ($randomTags as $tag) {
                 $videoGame->getTags()->add($tag);
             }
@@ -58,10 +55,14 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
         $manager->flush();
 
         // TODO : Ajouter des reviews aux vidéos
-        /** @var VideoGame $videoGame */
-        foreach ($videoGames as $videoGame) {
+        foreach ($videoGames as $index => $videoGame) {
+            /** @var VideoGame $videoGame */
             $reviewers = $this->faker->randomElements($users, rand(2, 5));
             foreach ($reviewers as $user) {
+                // Pour le premier jeu, exclure user+0 pour les tests
+                if (0 === $index && 'user+0@email.com' === $user->getEmail()) {
+                    continue;
+                }
                 $review = (new Review())
                     ->setVideoGame($videoGame)
                     ->setUser($user)

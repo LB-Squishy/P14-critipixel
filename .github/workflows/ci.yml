@@ -7,8 +7,30 @@ on:
         branches: [preprod]
 
 jobs:
-    test:
+    coding-standards:
+        name: Vérification de la qualité du code (PHP-CS-Fixer)
         runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Installation de PHP et des extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.3"
+                  extensions: mbstring, intl
+                  coverage: none
+
+            - name: Installer Composer
+              run: composer install --prefer-dist --no-progress --no-interaction
+
+            - name: Vérifier la qualité du code
+              run: composer cs:check
+
+    test:
+        name: Exécution des tests unitaires et fonctionnels (PHPUnit)
+        runs-on: ubuntu-latest
+        needs: coding-standards
 
         services:
             mysql:
@@ -36,10 +58,7 @@ jobs:
                   coverage: none
 
             - name: Installer Composer
-              run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
-
-            - name: Compiler SASS
-              run: php bin/console sass:build
+              run: composer install --prefer-dist --no-progress --no-interaction
 
             - name: Récupérer le .env de test
               run: cp .env.test .env.test.local
@@ -51,14 +70,8 @@ jobs:
                     sleep 5
                   done
 
-            - name: Créer la BDD de test
-              run: php bin/console doctrine:database:create --env=test --if-not-exists
+            - name: Compiler SASS
+              run: composer sass-build
 
-            - name: Exécuter les migrations
-              run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
-
-            - name: Exécuter les fixtures
-              run: php bin/console doctrine:fixtures:load --env=test --no-interaction
-
-            - name: Exécuter les tests
-              run: php bin/phpunit --testdox --colors=always
+            - name: Préparer la base de données de test et exécuter les tests
+              run: composer test

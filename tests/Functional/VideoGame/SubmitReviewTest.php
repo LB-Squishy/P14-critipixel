@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Tests\Functional\VideoGame;
 
 use App\Model\Entity\Review;
-use PHPUnit\Framework\Attributes\DataProvider;
 use App\Tests\Functional\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
 
 final class SubmitReviewTest extends FunctionalTestCase
 {
     /**
-     * Scenario: un utilisateur ajoute une note avec des données valides
+     * Scenario: un utilisateur ajoute une note avec des données valides.
      */
     public function testCanSubmitValidReviewWhenAuthenticated(): void
     {
@@ -53,7 +53,8 @@ final class SubmitReviewTest extends FunctionalTestCase
     }
 
     /**
-     * Scenario: un utilisateur ajoute une note avec des données invalides
+     * Scenario: un utilisateur ajoute une note avec des données invalides.
+     *
      * @param array<string, mixed> $formData
      */
     #[DataProvider('provideReviewsData')]
@@ -84,8 +85,9 @@ final class SubmitReviewTest extends FunctionalTestCase
         self::assertSame($reviewBefore, $reviewAfter);
     }
 
-    /** 
-     * Fournit des scénarios de tests avec différentes combinaisons de Reviews
+    /**
+     * Fournit des scénarios de tests avec différentes combinaisons de Reviews.
+     *
      * @return iterable<array{array<string, mixed>}>
      */
     public static function provideReviewsData(): iterable
@@ -94,7 +96,7 @@ final class SubmitReviewTest extends FunctionalTestCase
         yield 'Missing rating' => [
             [
                 'review[comment]' => 'Commentaire sans note',
-            ]
+            ],
         ];
 
         // Scénario 2: Commentaire trop long
@@ -102,12 +104,12 @@ final class SubmitReviewTest extends FunctionalTestCase
             [
                 'review[rating]' => 4,
                 'review[comment]' => str_repeat('a', 1001),
-            ]
+            ],
         ];
     }
 
     /**
-     * Scenario: un utilisateur non authentifié tente d'envoyer une note via un POST
+     * Scenario: un utilisateur non authentifié tente d'envoyer une note via un POST.
      */
     public function testCannotSubmitReviewByPostWhenNotAuthenticated(): void
     {
@@ -135,7 +137,7 @@ final class SubmitReviewTest extends FunctionalTestCase
     }
 
     /**
-     * Scenario: un utilisateur non authentifié ne doit pas voir le formulaire d'ajout de note
+     * Scenario: un utilisateur non authentifié ne doit pas voir le formulaire d'ajout de note.
      */
     public function testDontShowReviewFormWhenNotAuthenticated(): void
     {

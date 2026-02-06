@@ -5,7 +5,6 @@ namespace App\Doctrine\DataFixtures;
 use App\Model\Entity\Tag;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use function array_fill_callback;
 
 final class TagFixtures extends Fixture
 {
@@ -25,10 +24,10 @@ final class TagFixtures extends Fixture
             'Multijoueur',
         ];
 
-        $tags = array_fill_callback(
+        $tags = \array_fill_callback(
             0,
             count($tagsData),
-            fn(int $index): Tag => (new Tag)
+            fn (int $index): Tag => (new Tag())
                 ->setName($tagsData[$index])
         );
 

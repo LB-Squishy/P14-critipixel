@@ -4,7 +4,7 @@
 
 ## Pré-requis
 
-- PHP >= 8.2
+- PHP >= 8.3
 - Composer
 - Extension PHP Xdebug
 - Symfony (binaire)
@@ -89,6 +89,10 @@ _Note : le fichier `.symfony.local.yaml` est configuré pour surveiller les fich
 
 ```bash
 vendor/bin/phpunit --testdox
+```
+
+```bash
+composer cs:fix
 ```
 
 _Note : Penser à charger les fixtures avant chaque éxécution des tests._

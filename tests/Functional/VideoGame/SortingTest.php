@@ -9,16 +9,13 @@ use App\List\VideoGameList\Filter;
 use App\List\VideoGameList\Pagination;
 use App\Model\ValueObject\Direction;
 use App\Model\ValueObject\Sorting;
-use PHPUnit\Framework\Attributes\DataProvider;
 use App\Tests\Functional\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class SortingTest extends FunctionalTestCase
 {
     /**
-     * Scenario: affiche un nombre de jeux vidéo par page selon la sélection avec différents tris
-     * @param int $limit
-     * @param Sorting $sorting
-     * @param Direction $direction
+     * Scenario: affiche un nombre de jeux vidéo par page selon la sélection avec différents tris.
      */
     #[DataProvider('provideSortingAndPaginationData')]
     public function testShouldListVideoGamesPerPage(int $limit, Sorting $sorting, Direction $direction): void
@@ -33,7 +30,7 @@ final class SortingTest extends FunctionalTestCase
         $expectedGames = iterator_to_array($paginator);
         $expectedgameCardCount = count($expectedGames);
 
-        //prépare les données du formulaire de tri
+        // prépare les données du formulaire de tri
         $formData = [
             'limit' => $limit,
             'sorting' => $sorting->name,
@@ -54,12 +51,13 @@ final class SortingTest extends FunctionalTestCase
         // Vérifie que les jeux vidéo s'affichent dans l'ordre attendu
         foreach ($expectedGames as $index => $expectedGame) {
             $expectedGameTitle = $expectedGame->getTitle();
-            self::assertAnySelectorTextContains("article.game-card:nth-child(" . ($index + 1) . ") h5.game-card-title a", $expectedGameTitle, "Le jeu vidéo '$expectedGameTitle' doit s'afficher à la position " . ($index + 1) . " pour le tri sélectionné.");
+            self::assertAnySelectorTextContains('article.game-card:nth-child('.($index + 1).') h5.game-card-title a', $expectedGameTitle, "Le jeu vidéo '$expectedGameTitle' doit s'afficher à la position ".($index + 1).' pour le tri sélectionné.');
         }
     }
 
-    /** 
-     * Fournit des scénarios de tests avec différentes combinaisons de Tri et pagination
+    /**
+     * Fournit des scénarios de tests avec différentes combinaisons de Tri et pagination.
+     *
      * @return iterable<array{int, Sorting, Direction}>
      */
     public static function provideSortingAndPaginationData(): iterable
