@@ -60,9 +60,5 @@ jobs:
             - name: Exécuter les fixtures
               run: php bin/console doctrine:fixtures:load --env=test --no-interaction
 
-            - name: Importer les données de test
-              run: |
-                  mysql -h 127.0.0.1 -u root criti-pixel < criti-pixel_test.sql
-
             - name: Exécuter les tests
               run: php bin/phpunit --testdox --colors=always
