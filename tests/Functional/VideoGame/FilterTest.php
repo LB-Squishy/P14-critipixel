@@ -88,17 +88,15 @@ final class FilterTest extends FunctionalTestCase
     /**
      * Scenario: filtre les jeux vidéo par tags
      * @param array<string, mixed> $formData
-     * @param array<int> $tagIds
      * @return void
      */
     #[DataProvider('provideFilterData')]
-    public function testShouldFilterVideoGamesByTag(array $formData, array $tagIds): void
+    public function testShouldFilterVideoGamesByTag(array $formData): void
     {
         // Prépare les éléments nécessaires pour la récupération des jeux vidéo en base de données en fonction des tags sélectionnés
         $repository = $this->service(VideoGameRepository::class);
-        $tags = !empty($tagIds)
-            ? $this->getEntityManager()->getRepository(Tag::class)->findBy(['id' => $tagIds])
-            : [];
+        $tagIds = array_values($formData);
+        $tags = $this->getEntityManager()->getRepository(Tag::class)->findBy(['id' => $tagIds]);
         $pagination = new Pagination(1, 10, Sorting::ReleaseDate, Direction::Descending);
         $filter = new Filter(null, $tags);
 
@@ -128,27 +126,24 @@ final class FilterTest extends FunctionalTestCase
     }
 
     /** 
-     * Fournit des scénarios de tests avec différentes combinaisons de Filtrages
-     * @return iterable<array{array<string, mixed>}, array<int>}>
+     * Fournit des scénarios de tests avec différentes combinaisons de Filtrages par tags
+     * @return iterable<array{array<string, mixed>}>
      */
     public static function provideFilterData(): iterable
     {
         // Scénario 1: Aucun tag sélectionné
         yield 'No tags' => [
-            [],
             []
         ];
 
         // Scénario 2: Un seul tag "aventure"
         yield 'One tag : aventure' => [
-            ['filter[tags][1]' => '2'],
-            [2]
+            ['filter[tags][1]' => '2']
         ];
 
         // Scénario 3: Un seul tag "fps"
         yield 'One tag : fps' => [
-            ['filter[tags][2]' => '3'],
-            [3]
+            ['filter[tags][2]' => '3']
         ];
 
         // Scénario 4: Plusieurs tags "action" et "simulation"
@@ -156,8 +151,7 @@ final class FilterTest extends FunctionalTestCase
             [
                 'filter[tags][0]' => '1',
                 'filter[tags][1]' => '2',
-            ],
-            [1, 2]
+            ]
         ];
 
         // Scénario 5: Tout les Tags pour checker message "aucun résultats"
@@ -174,8 +168,7 @@ final class FilterTest extends FunctionalTestCase
                 'filter[tags][8]' => '9',
                 'filter[tags][9]' => '10',
                 'filter[tags][10]' => '11',
-            ],
-            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+            ]
         ];
     }
 }
