@@ -38,6 +38,9 @@ jobs:
             - name: Installer Composer
               run: composer install --prefer-dist --no-progress --no-suggest --no-interaction
 
+            - name: Compiler SASS
+              run: php bin/console sass:build
+
             - name: Récupérer le .env de test
               run: cp .env.test .env.test.local
 
