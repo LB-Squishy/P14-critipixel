@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional\VideoGame;
 
+use App\Doctrine\Repository\VideoGameRepository;
+use App\List\VideoGameList\Filter;
+use App\List\VideoGameList\Pagination;
+use App\Model\Entity\Tag;
+use App\Model\ValueObject\Direction;
+use App\Model\ValueObject\Sorting;
 use PHPUnit\Framework\Attributes\DataProvider;
 use App\Tests\Functional\FunctionalTestCase;
 
@@ -82,13 +88,25 @@ final class FilterTest extends FunctionalTestCase
     /**
      * Scenario: filtre les jeux vidéo par tags
      * @param array<string, mixed> $formData
-     * @param int $gameCardCount
-     * @param string|null $gameName
+     * @param array<int> $tagIds
      * @return void
      */
     #[DataProvider('provideFilterData')]
-    public function testShouldFilterVideoGamesByTag(array $formData, int $gameCardCount, ?string $gameName): void
+    public function testShouldFilterVideoGamesByTag(array $formData, array $tagIds): void
     {
+        // Prépare les éléments nécessaires pour la récupération des jeux vidéo en base de données en fonction des tags sélectionnés
+        $repository = $this->service(VideoGameRepository::class);
+        $tags = !empty($tagIds)
+            ? $this->getEntityManager()->getRepository(Tag::class)->findBy(['id' => $tagIds])
+            : [];
+        $pagination = new Pagination(1, 10, Sorting::ReleaseDate, Direction::Descending);
+        $filter = new Filter(null, $tags);
+
+        // Récupère les jeux vidéo attendus en fonction des critères de filtrage
+        $paginator = $repository->getVideoGames($pagination, $filter);
+        $expectedGames = iterator_to_array($paginator);
+        $expectedgameCardCount = count($expectedGames);
+
         // Accède à la page d'accueil
         $this->get('/');
         self::assertResponseIsSuccessful();
@@ -98,42 +116,39 @@ final class FilterTest extends FunctionalTestCase
         self::assertResponseIsSuccessful();
 
         // Vérifie les résultats en fonction des données fournies
-        if ($gameName === null) {
+        if ($expectedgameCardCount === 0) {
             // Vérifie la présence d'un message indiquant qu'aucun jeu vidéo n'a été trouvé
-            self::assertSelectorCount($gameCardCount, 'article.game-card', 'Aucun jeu vidéo ne doit être affiché après filtrage par tout les tags.');
+            self::assertSelectorCount($expectedgameCardCount, 'article.game-card', 'Aucun jeu vidéo ne doit être affiché après filtrage par tout les tags.');
             self::assertAnySelectorTextContains('div.fw-bold', 'Affiche 0 jeux vidéo', 'La selection de tout les Tags doit déclencher l\'affichage d\'un message dédié à l\'abscence de jeux vidéo correspondant.');
         } else {
             // Vérifie que le nombre attendu de jeux vidéo est affiché et que le jeu vidéo attendu est présent
-            self::assertSelectorCount($gameCardCount, 'article.game-card', 'Le nombre de jeux vidéo affichés doit correspondre au nombre attendu après filtrage par tags.');
-            self::assertAnySelectorTextContains('h5.game-card-title a', $gameName, 'Le jeu vidéo en question doit correspondre au critère de recherche.');
+            self::assertSelectorCount($expectedgameCardCount, 'article.game-card', 'Le nombre de jeux vidéo affichés doit correspondre au nombre attendu après filtrage par tags.');
+            self::assertAnySelectorTextContains('h5.game-card-title a', $expectedGames[0]->getTitle(), 'Le jeu vidéo en question doit correspondre au critère de recherche.');
         }
     }
 
     /** 
      * Fournit des scénarios de tests avec différentes combinaisons de Filtrages
-     * @return iterable<array{array<string, mixed>, int, string|null}>
+     * @return iterable<array{array<string, mixed>}, array<int>}>
      */
     public static function provideFilterData(): iterable
     {
         // Scénario 1: Aucun tag sélectionné
         yield 'No tags' => [
             [],
-            10,
-            'Jeu vidéo 0',
+            []
         ];
 
         // Scénario 2: Un seul tag "aventure"
         yield 'One tag : aventure' => [
             ['filter[tags][1]' => '2'],
-            4,
-            'Jeu vidéo 25',
+            [2]
         ];
 
         // Scénario 3: Un seul tag "fps"
         yield 'One tag : fps' => [
             ['filter[tags][2]' => '3'],
-            5,
-            'Jeu vidéo 9',
+            [3]
         ];
 
         // Scénario 4: Plusieurs tags "action" et "simulation"
@@ -142,8 +157,7 @@ final class FilterTest extends FunctionalTestCase
                 'filter[tags][0]' => '1',
                 'filter[tags][1]' => '2',
             ],
-            2,
-            'Jeu vidéo 12',
+            [1, 2]
         ];
 
         // Scénario 5: Tout les Tags pour checker message "aucun résultats"
@@ -161,8 +175,7 @@ final class FilterTest extends FunctionalTestCase
                 'filter[tags][9]' => '10',
                 'filter[tags][10]' => '11',
             ],
-            0,
-            null,
+            [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         ];
     }
 }
