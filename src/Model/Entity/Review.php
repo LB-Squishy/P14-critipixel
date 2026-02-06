@@ -11,10 +11,10 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Component\Validator\Constraints\Range;
 
 #[Entity]
 class Review
@@ -55,6 +55,7 @@ class Review
     public function setVideoGame(VideoGame $videoGame): Review
     {
         $this->videoGame = $videoGame;
+
         return $this;
     }
 
@@ -66,6 +67,7 @@ class Review
     public function setUser(User $user): Review
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -77,6 +79,7 @@ class Review
     public function setRating(int $rating): Review
     {
         $this->rating = $rating;
+
         return $this;
     }
 
@@ -88,6 +91,7 @@ class Review
     public function setComment(?string $comment): Review
     {
         $this->comment = $comment;
+
         return $this;
     }
 }

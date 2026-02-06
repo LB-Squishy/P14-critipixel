@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Rating;
 
+use App\Model\Entity\NumberOfRatingPerValue;
 use App\Model\Entity\Review;
 use App\Model\Entity\VideoGame;
-use App\Model\Entity\NumberOfRatingPerValue;
 use App\Rating\RatingHandler;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
 final class CountRatingsPerValueTest extends TestCase
 {
     /**
-     * Teste le comptage des notes par valeur pour différentes combinaisons de Reviews
+     * Teste le comptage des notes par valeur pour différentes combinaisons de Reviews.
      */
     #[DataProvider('provideRatingsData')]
     public function testCountRatingsPerValue(VideoGame $videoGame, NumberOfRatingPerValue $expectedNumberOfRatingPerValue): void
@@ -27,8 +27,9 @@ final class CountRatingsPerValueTest extends TestCase
         $this->assertEquals($expectedNumberOfRatingPerValue, $videoGame->getNumberOfRatingsPerValue(), 'Le comptage des notes par valeur doit être correct.');
     }
 
-    /** 
-     * Fournit des scénarios de tests avec différentes combinaisons de Reviews
+    /**
+     * Fournit des scénarios de tests avec différentes combinaisons de Reviews.
+     *
      * @return iterable<array{VideoGame,NumberOfRatingPerValue}>
      */
     public static function provideRatingsData(): iterable
@@ -53,9 +54,9 @@ final class CountRatingsPerValueTest extends TestCase
     }
 
     /**
-     * Crée une instance de VideoGame avec des Reviews ayant les notes spécifiées
+     * Crée une instance de VideoGame avec des Reviews ayant les notes spécifiées.
+     *
      * @param int ...$ratings Les notes des reviews à ajouter
-     * @return VideoGame
      */
     private static function createVideoGame(int ...$ratings): VideoGame
     {
@@ -71,13 +72,13 @@ final class CountRatingsPerValueTest extends TestCase
     }
 
     /**
-     * Crée une instance de NumberOfRatingPerValue avec les compteurs spécifiés
-     * @param int $one Nombre de notes 1
-     * @param int $two Nombre de notes 2
+     * Crée une instance de NumberOfRatingPerValue avec les compteurs spécifiés.
+     *
+     * @param int $one   Nombre de notes 1
+     * @param int $two   Nombre de notes 2
      * @param int $three Nombre de notes 3
-     * @param int $four Nombre de notes 4
-     * @param int $five Nombre de notes 5
-     * @return NumberOfRatingPerValue
+     * @param int $four  Nombre de notes 4
+     * @param int $five  Nombre de notes 5
      */
     private static function createNumberOfRatingPerValue(int $one, int $two, int $three, int $four, int $five): NumberOfRatingPerValue
     {
@@ -85,19 +86,19 @@ final class CountRatingsPerValueTest extends TestCase
         $numberOfRatingPerValue = new NumberOfRatingPerValue();
 
         // Incrémente les compteurs selon les valeurs spécifiées
-        for ($i = 0; $i < $one; $i++) {
+        for ($i = 0; $i < $one; ++$i) {
             $numberOfRatingPerValue->increaseOne();
         }
-        for ($i = 0; $i < $two; $i++) {
+        for ($i = 0; $i < $two; ++$i) {
             $numberOfRatingPerValue->increaseTwo();
         }
-        for ($i = 0; $i < $three; $i++) {
+        for ($i = 0; $i < $three; ++$i) {
             $numberOfRatingPerValue->increaseThree();
         }
-        for ($i = 0; $i < $four; $i++) {
+        for ($i = 0; $i < $four; ++$i) {
             $numberOfRatingPerValue->increaseFour();
         }
-        for ($i = 0; $i < $five; $i++) {
+        for ($i = 0; $i < $five; ++$i) {
             $numberOfRatingPerValue->increaseFive();
         }
 

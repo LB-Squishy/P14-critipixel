@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 final class ShowTest extends FunctionalTestCase
 {
     /**
-     * Scenario: affichage d'un jeu vidéo existant (code status 2xx)
+     * Scenario: affichage d'un jeu vidéo existant (code status 2xx).
      */
     public function testShouldShowVideoGame(): void
     {
@@ -20,7 +20,7 @@ final class ShowTest extends FunctionalTestCase
     }
 
     /**
-     * Scénario: non affichage d'un jeu vidéo inexistant (code status 404)
+     * Scénario: non affichage d'un jeu vidéo inexistant (code status 404).
      */
     public function testShouldReturn404ForNonExistentVideoGame(): void
     {
