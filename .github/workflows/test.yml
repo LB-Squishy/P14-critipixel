@@ -57,6 +57,9 @@ jobs:
             - name: Exécuter les migrations
               run: php bin/console doctrine:migrations:migrate --env=test --no-interaction
 
+            - name: Exécuter les fixtures
+              run: php bin/console doctrine:fixtures:load --env=test --no-interaction
+
             - name: Importer les données de test
               run: |
                   mysql -h 127.0.0.1 -u root criti-pixel < criti-pixel_test.sql
