@@ -19,7 +19,8 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
         private readonly Generator $faker,
         private readonly CalculateAverageRating $calculateAverageRating,
         private readonly CountRatingsPerValue $countRatingsPerValue,
-    ) {}
+    ) {
+    }
 
     public function load(ObjectManager $manager): void
     {
@@ -31,7 +32,7 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
         $videoGames = \array_fill_callback(
             0,
             50,
-            fn(int $index): VideoGame => (new VideoGame())
+            fn (int $index): VideoGame => (new VideoGame())
                 ->setTitle(sprintf('Jeu vidéo %d', $index))
                 ->setDescription($this->faker->paragraphs(10, true))
                 ->setReleaseDate((new \DateTimeImmutable())->sub(new \DateInterval(sprintf('P%dD', $index))))
@@ -59,7 +60,7 @@ final class VideoGameFixtures extends Fixture implements DependentFixtureInterfa
             $reviewers = $this->faker->randomElements($users, rand(2, 5));
             foreach ($reviewers as $user) {
                 // Pour le premier jeu, exclure user+0 pour les tests
-                if ($index === 0 && $user->getEmail() === 'user+0@email.com') {
+                if (0 === $index && 'user+0@email.com' === $user->getEmail()) {
                     continue;
                 }
                 $review = (new Review())
