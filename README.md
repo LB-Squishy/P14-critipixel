@@ -11,7 +11,7 @@
 
 ## Installation
 
-### Composer
+### Dépendances
 
 Dans un premier temps, installer les dépendances :
 
@@ -47,7 +47,7 @@ De même pour la version de PHP que vous pouvez spécifier dans un fichier `.php
 
 ## Usage
 
-### Base de données
+### 1. Base de données
 
 #### Supprimer la base de données
 
@@ -75,7 +75,7 @@ symfony console doctrine:fixtures:load -n --purge-with-truncate
 
 _Note : Vous pouvez exécuter ces commandes avec l'option `--env=test` pour les exécuter dans l'environnement de test._
 
-### SASS
+### 2. SASS
 
 #### Compiler les fichiers SASS
 
@@ -85,27 +85,57 @@ symfony console sass:build
 
 _Note : le fichier `.symfony.local.yaml` est configuré pour surveiller les fichiers SASS et les compiler automatiquement quand vous lancez le serveur web de Symfony._
 
-### Tests
+### 3. Serveur web
+
+#### Lancer le serveur
 
 ```bash
-vendor/bin/phpunit --testdox
+symfony serve
 ```
+
+## Tests
+
+### 1. PHPStan
+
+#### Lancer les tests PHPStan
+
+```bash
+composer test:phpstan
+```
+
+### 2. Vérifier le style (PHP-CS-Fixer)
+
+#### Vérifier sans correction
+
+```bash
+composer cs:check
+```
+
+#### Corriger automatiquement
 
 ```bash
 composer cs:fix
 ```
 
+### 3. PHPUnit
+
+#### Lancer les tests PHPUnit
+
+```bash
+composer test:phpunit
+```
+
 _Note : Penser à charger les fixtures avant chaque éxécution des tests._
 
-### Rapport de couverture de code
+## Rapport de couverture de code
 
-#### Générer le rapport de couverture
+### 1. Générer le rapport de couverture
 
 ```bash
 vendor/bin/phpunit --coverage-html public/test-coverage
 ```
 
-#### Ouvrir le rapport dans le navigateur
+### 2. Ouvrir le rapport dans le navigateur
 
 ```bash
 start public/test-coverage/index.html
@@ -113,8 +143,40 @@ start public/test-coverage/index.html
 
 _Note : Le rapport doit être régénéré après chaque modification du code ou des tests._
 
-### Serveur web
+## Raccourcis pratiques
+
+_Note : Commandes correspondants aux scripts composer (Cf. composer.json)._
+
+### 1. Base de données
+
+#### Réinitialise la base dev (drop/create/migrate/fixtures):
 
 ```bash
-symfony serve
+composer db
+```
+
+#### Réinitialise la base test (drop/create/migrate/fixtures):
+
+```bash
+composer db-test
+```
+
+### 2. Tests
+
+#### Tests complet rapide (cs:check + test:stan + test:phpunit):
+
+```bash
+composer test:quick
+```
+
+#### Tests PHPUnit avec une base test reset (db-test + test:phpunit):
+
+```bash
+composer test:phpunit:ci
+```
+
+#### Tests complet avec une base test reset (cs:check + test:stan + db-test + test:phpunit):
+
+```bash
+composer test:all
 ```

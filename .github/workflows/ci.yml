@@ -27,10 +27,33 @@ jobs:
             - name: Vérifier la qualité du code
               run: composer cs:check
 
+    static-analysis:
+        name: Analyse statique (PHPStan)
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Installation de PHP et des extensions
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: "8.3"
+                  extensions: mbstring, intl, pdo_mysql
+                  coverage: none
+
+            - name: Installer Composer
+              run: composer install --prefer-dist --no-progress --no-interaction
+
+            - name: Warmup cache Symfony
+              run: php bin/console cache:warm --env=dev
+
+            - name: Exécuter PHPStan
+              run: composer test:phpstan
+
     test:
         name: Exécution des tests unitaires et fonctionnels (PHPUnit)
         runs-on: ubuntu-latest
-        needs: coding-standards
+        needs: [coding-standards, static-analysis]
 
         services:
             mysql:
@@ -71,7 +94,7 @@ jobs:
                   done
 
             - name: Compiler SASS
-              run: composer sass-build
+              run: composer sass:build
 
             - name: Préparer la base de données de test et exécuter les tests
-              run: composer test
+              run: composer test:phpunit:ci

@@ -8,6 +8,7 @@ use App\Form\ReviewType;
 use App\List\ListFactory;
 use App\List\VideoGameList\Pagination;
 use App\Model\Entity\Review;
+use App\Model\Entity\User;
 use App\Model\Entity\VideoGame;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,7 +44,13 @@ final class VideoGameController extends AbstractController
 
             if ($form->isValid()) {
                 $review->setVideoGame($videoGame);
-                $review->setUser($this->getUser());
+
+                $user = $this->getUser();
+                if (!$user instanceof User) {
+                    throw $this->createAccessDeniedException('Vous devez être connecté pour soumettre un avis.');
+                }
+                $review->setUser($user);
+
                 $entityManager->persist($review);
                 $entityManager->flush();
 
@@ -53,7 +60,7 @@ final class VideoGameController extends AbstractController
 
         $response = $this->render('views/video_games/show.html.twig', ['video_game' => $videoGame, 'form' => $form]);
 
-        if ($form->isSubmitted() && !$form->isValid()) {
+        if ($form->isSubmitted()) {
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
