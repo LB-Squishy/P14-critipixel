@@ -48,7 +48,7 @@ jobs:
               run: php bin/console cache:warm --env=dev
 
             - name: Exécuter PHPStan
-              run: composer stan-test
+              run: composer test:phpstan
 
     test:
         name: Exécution des tests unitaires et fonctionnels (PHPUnit)
@@ -94,7 +94,7 @@ jobs:
                   done
 
             - name: Compiler SASS
-              run: composer sass-build
+              run: composer sass:build
 
             - name: Préparer la base de données de test et exécuter les tests
-              run: composer test
+              run: composer test:phpunit:ci

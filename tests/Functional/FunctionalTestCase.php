@@ -44,7 +44,7 @@ abstract class FunctionalTestCase extends WebTestCase
     /**
      * Récupère un service du conteneur d'injection de dépendances.
      *
-     * @template T
+     * @template T of object
      *
      * @param class-string<T> $id
      *
@@ -57,6 +57,8 @@ abstract class FunctionalTestCase extends WebTestCase
 
     /**
      * Effectue une requête GET pour les tests fonctionnels.
+     *
+     * @param array<string, mixed> $parameters
      */
     protected function get(string $uri, array $parameters = []): Crawler
     {
