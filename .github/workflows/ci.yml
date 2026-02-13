@@ -2,9 +2,7 @@ name: Tests
 
 on:
     push:
-        branches: [preprod]
     pull_request:
-        branches: [preprod]
 
 jobs:
     coding-standards:
